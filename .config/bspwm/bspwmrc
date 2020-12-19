@@ -1,0 +1,45 @@
+#!/usr/bin/bash
+export SXHKD_SHELL=/usr/bin/bash
+killall sxhkd; sxhkd > ~/.sxhkd.log &
+bspc config focus_follows_pointer true
+
+#bspc monitor HDMI-A-0 -d I II III IV V
+#bspc monitor DisplayPort-1 -d VI VII VIII IX X
+
+bspc monitor HDMI-0 -d I II III IV V
+bspc monitor DP-1 -d VI VII VIII IX X
+
+bspc config border_width         2
+bspc config window_gap          15
+
+bspc config split_ratio          0.52
+bspc config borderless_monocle   true
+bspc config gapless_monocle      true
+
+bspc rule -a Origin.exe state=floating 
+
+bspc rule -a ckb-next desktop='^6'
+
+bspc rule -a mplayer2 state=floating
+bspc rule -a Kupfer.py focus=on
+bspc rule -a Screenkey manage=off
+bspc rule -a zathura state=tiled
+bspc rule -a zoom desktop='^6' 
+bspc config external_rules_command "$HOME/scripts/vlcRule.sh"
+
+
+xsettingsd &
+
+~/scripts/wallpaperChange.sh &
+
+picom &
+killall /usr/lib/kdeconnectd; /usr/lib/kdeconnectd &
+# ~/scripts/mailer.py &
+killall tint2; tint2 &
+#killall radeon-profile; radeon-profile &
+nm-applet &
+#xrandr --output HDMI-A-0 --set TearFree on
+#xrandr --output DisplayPort-2 --set TearFree on
+numlockx
+killall ckb-next; ckb-next -b &
+
