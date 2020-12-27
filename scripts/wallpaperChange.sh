@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash 
 WALLPAPER_tmp="${HOME}/Pictures/wallpaper_name"
 WALLPAPER="${HOME}/Pictures/wallpaper.png"
 DIR="${HOME}/Pictures/wallpapers/"
@@ -6,21 +6,27 @@ DIR="${HOME}/Pictures/wallpapers/"
 touch $WALLPAPER_tmp
 
 CurrentWall=$(cat $WALLPAPER_tmp )
-
-ls $DIR |sort -R |tail -n 2 |while read file; do
-	if [ "$file" == "$CurrentWall" ]; then
-		echo "skipping $file"
-	else
-		$HOME/scripts/blendWP.sh "${DIR}${file}"
-		cp "${DIR}${file}" $WALLPAPER
-		echo $file > $WALLPAPER_tmp
-		break
-	fi
-done
+if [ -f "${DIR}${1}" ] && [ "$#" == "1" ]; then
+	echo "Setting $1"
+	TargetFile=$1
+else
+	TargetFile=$(ls $DIR |sort -R |tail -n 2 |while read file; do
+		if [ "$file" == "$CurrentWall" ]; then
+			echo "skipping $file"
+		else
+			$HOME/scripts/blendWP.sh "${DIR}${file}"
+			echo $file
+			break
+		fi
+	done | tail -1)
+fi
+echo $TargetFile
+cp "${DIR}${TargetFile}" $WALLPAPER
+echo $TargetFile > $WALLPAPER_tmp
 
 rm -r "${HOME}/.cache/wal"
 wpg -s ~/Pictures/wallpapers/$(cat ~/Pictures/wallpaper_name)
-wal -n -i $WALLPAPER --saturate 0.7 
+wal -i $WALLPAPER --saturate 0.7 
 pywalfox update
 
 . "${HOME}/.cache/wal/colors.sh"
